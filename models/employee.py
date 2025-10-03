@@ -1,6 +1,6 @@
 from sqlalchemy import func
 
-import db
+from db import db
 
 
 class EmployeeModel(db.Model):

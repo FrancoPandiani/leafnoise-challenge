@@ -3,13 +3,12 @@ from flask_migrate import Migrate
 from flask_smorest import Api
 
 from db import db
-
-# from routes.employee import blp as EmployeeBlueprint
+from routes.employee import blp as EmployeeBlueprint
 
 
 def create_app(db_url=None):
     app = Flask(__name__)
-    app.config["API_TITLE"] = "PeopleFlow REST API"
+    app.config["API_TITLE"] = "People Flow REST API"
     app.config["API_VERSION"] = "v1"
     app.config["OPENAPI_VERSION"] = "3.0.3"
     app.config["OPENAPI_URL_PREFIX"] = "/"
@@ -27,7 +26,7 @@ def create_app(db_url=None):
     with app.app_context():
         db.create_all()
 
-    # api.register_blueprint(EmployeeBlueprint)
+    api.register_blueprint(EmployeeBlueprint)
 
     @app.route("/")
     def home():
