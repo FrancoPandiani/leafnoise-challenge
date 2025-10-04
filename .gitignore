@@ -19,6 +19,6 @@ instance/
 # Migraciones
 migrations/__pycache__/
 
-# IDEs
+# IDE
 .vscode/
 .DS_Store

@@ -37,7 +37,7 @@ class EmployeePost(MethodView):
 
         return employee
 
-    # [GET] ALL - Con filtro por posición y paginación
+    # [GET] ALL - Con filtro por posición
     @blp.arguments(EmployeePaginationSchema, location="query")
     @blp.response(200, EmployeeSchema(many=True))
     def get(self, query_args):
@@ -48,16 +48,15 @@ class EmployeePost(MethodView):
                 EmployeeModel.position.ilike(f"%{query_args['position']}%")
             )
 
-        # Paginación
+        # Paginación solicitada
         page = query_args.get("page", 1)
         per_page = query_args.get("per_page", 10)
         paginated = db.paginate(query, page=page, per_page=per_page, error_out=False)
 
         return paginated.items
 
-    # [GET] Por ID
 
-
+# [GET] Por ID
 @blp.route("/employee/<string:employee_id>")
 class Employee(MethodView):
     @jwt_required()
@@ -97,9 +96,8 @@ class Employee(MethodView):
 
         return employee
 
-    # [GET] Reporte de promedio de salarios
 
-
+# [GET] Reporte de promedio de salarios
 @blp.route("/employees/reports/salary-average")
 class SalaryAverage(MethodView):
     @blp.response(200, SalaryAverageSchema)

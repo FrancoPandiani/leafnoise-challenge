@@ -1,6 +1,6 @@
 # Backend Challenge - Leafnoise
 
-API REST desarrollada por **Franco Pandiani** en **Python 3.10** con **Flask** para la gestión de empleados en *PeopleFlow*.  
+API REST desarrollada por **Franco Pandiani** en **Python 3.10** con **Flask** para la gestión de empleados en *People Flow*.  
 Este proyecto ofrece una solución completa para el registro, consulta, actualización y eliminación de empleados.
 
 ---
@@ -87,7 +87,7 @@ SQLite permite ejecutar el proyecto sin dependencias externas, mientras que SQLA
 
 ### JWT Authentication
 Implementé autenticación basada en tokens **JWT** para proteger los endpoints y aplicar buenas prácticas de seguridad en APIs REST.  
-Los endpoints críticos (como la creación de empleados) requieren autenticación, mientras que otros —como listar empleados, paginar o calcular salario promedio— se dejaron abiertos para facilitar las pruebas durante el challenge.
+Los endpoints críticos (como la creación de empleados) requieren autenticación, mientras que otros como listar empleados, paginar o calcular salario promedio se dejaron abiertos para facilitar las pruebas durante el challenge.
 
 ### Docker
 Utilicé containerización con **Docker** para garantizar que la aplicación se ejecute de forma consistente en cualquier entorno y simplificar el despliegue.
