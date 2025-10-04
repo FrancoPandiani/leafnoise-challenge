@@ -1,9 +1,11 @@
-from flask import Flask, redirect
+from flask import Flask, jsonify, redirect
+from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from flask_smorest import Api
 
 from db import db
 from routes.employee import blp as EmployeeBlueprint
+from routes.user import blp as UserBlueprint
 
 
 def create_app(db_url=None):
@@ -19,14 +21,52 @@ def create_app(db_url=None):
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url or "sqlite:///data.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["PROPAGATE_EXCEPTIONS"] = True
+
     db.init_app(app)
     migrate = Migrate(app, db)
     api = Api(app)
+
+    # ===============================================================
+    # CONFIGURACIÓN DE JWT
+    # ===============================================================
+    app.config["JWT_SECRET_KEY"] = "franco"
+    jwt = JWTManager(app)
+
+    @jwt.expired_token_loader
+    def expired_token_callback(jwt_header, jwt_payload):
+        return (
+            jsonify({"message": "The token has expired.", "error": "token_expired"}),
+            401,
+        )
+
+    @jwt.invalid_token_loader
+    def invalid_token_callback(error):
+        return (
+            jsonify(
+                {"message": "Signature verification failed.", "error": "invalid_token"}
+            ),
+            401,
+        )
+
+    @jwt.unauthorized_loader
+    def missing_token_callback(error):
+        return (
+            jsonify(
+                {
+                    "description": "Request does not contain an access token.",
+                    "error": "authorization_required",
+                }
+            ),
+            401,
+        )
+
+    # ===============================================================
 
     with app.app_context():
         db.create_all()
 
     api.register_blueprint(EmployeeBlueprint)
+    api.register_blueprint(UserBlueprint)
 
     @app.route("/")
     def home():

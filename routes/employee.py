@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from flask.views import MethodView
+from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
 from sqlalchemy import func, select
 
@@ -19,6 +20,7 @@ blp = Blueprint("Employees", __name__, description="Employee operations")
 # [POST]
 @blp.route("/employees")
 class EmployeePost(MethodView):
+    @jwt_required()
     @blp.arguments(EmployeeSchema)
     @blp.response(201, EmployeeSchema)
     def post(self, employee_data):
@@ -35,7 +37,7 @@ class EmployeePost(MethodView):
 
         return employee
 
-    # [GET ALL] Con filtro por posición y paginación
+    # [GET] ALL - Con filtro por posición y paginación
     @blp.arguments(EmployeePaginationSchema, location="query")
     @blp.response(200, EmployeeSchema(many=True))
     def get(self, query_args):
@@ -57,12 +59,14 @@ class EmployeePost(MethodView):
 # [GET] Por ID
 @blp.route("/employee/<string:employee_id>")
 class Employee(MethodView):
+    @jwt_required()
     @blp.response(200, EmployeeSchema)
     def get(self, employee_id):
         employee = EmployeeModel.query.get_or_404(employee_id)
         return employee
 
     # [DELETE] Por ID
+    @jwt_required()
     def delete(self, employee_id):
         employee = EmployeeModel.query.get_or_404(employee_id)
         db.session.delete(employee)
