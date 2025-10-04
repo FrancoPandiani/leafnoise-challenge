@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, redirect
 from flask_jwt_extended import JWTManager
-from flask_migrate import Migrate
 from flask_smorest import Api
 
 from db import db
@@ -21,15 +20,10 @@ def create_app(db_url=None):
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url or "sqlite:///data.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["PROPAGATE_EXCEPTIONS"] = True
-
     db.init_app(app)
-    migrate = Migrate(app, db)
     api = Api(app)
 
-    # ===============================================================
-    # CONFIGURACIÓN DE JWT
-    # ===============================================================
-    app.config["JWT_SECRET_KEY"] = "franco"
+    app.config["JWT_SECRET_KEY"] = "franco_key"
     jwt = JWTManager(app)
 
     @jwt.expired_token_loader
@@ -60,13 +54,11 @@ def create_app(db_url=None):
             401,
         )
 
-    # ===============================================================
-
     with app.app_context():
         db.create_all()
 
-    api.register_blueprint(EmployeeBlueprint)
     api.register_blueprint(UserBlueprint)
+    api.register_blueprint(EmployeeBlueprint)
 
     @app.route("/")
     def home():

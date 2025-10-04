@@ -55,8 +55,9 @@ class EmployeePost(MethodView):
 
         return paginated.items
 
+    # [GET] Por ID
 
-# [GET] Por ID
+
 @blp.route("/employee/<string:employee_id>")
 class Employee(MethodView):
     @jwt_required()
@@ -76,6 +77,7 @@ class Employee(MethodView):
         }
 
     # [PUT] Por ID
+    @jwt_required()
     @blp.arguments(EmployeeUpdateSchema)
     @blp.response(200, EmployeeSchema)
     def put(self, employee_data, employee_id):
@@ -95,8 +97,9 @@ class Employee(MethodView):
 
         return employee
 
+    # [GET] Reporte de promedio de salarios
 
-# [GET] Reporte de promedio de salarios
+
 @blp.route("/employees/reports/salary-average")
 class SalaryAverage(MethodView):
     @blp.response(200, SalaryAverageSchema)
