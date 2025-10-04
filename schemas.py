@@ -17,3 +17,19 @@ class EmployeeUpdateSchema(Schema):
     email = fields.Email(validate=validate.Length(max=100))
     position = fields.Str(validate=validate.Length(min=1, max=50))
     salary = fields.Decimal(places=2, validate=validate.Range(min=0))
+
+
+# Schema exclusivo de listado con filtros y paginación
+class EmployeePaginationSchema(Schema):
+    position = fields.Str(required=False, validate=validate.Length(max=50))
+    page = fields.Int(required=False, load_default=1, validate=validate.Range(min=1))
+    per_page = fields.Int(
+        required=False, load_default=10, validate=validate.Range(min=1, max=100)
+    )
+
+
+# Schema exclusivo para el reporte de promedio de salarios
+class SalaryAverageSchema(Schema):
+    average_salary = fields.Decimal(places=2)
+    total_employees = fields.Int()
+    report_date = fields.DateTime()
